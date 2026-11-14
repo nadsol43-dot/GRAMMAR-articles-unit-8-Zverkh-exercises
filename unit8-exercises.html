@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 8 · Артикли — интерактивные упражнения 8.1, 8.2 и 8.3</title>
+<style>
+  :root{
+    --paper:#F7F2E8; --card:#FFFCF5; --ink:#23252B; --line:#E4DCCB;
+    --a:#DD4B26; --the:#27348B; --zero:#6B7280;
+    --ok:#1E8E3E; --bad:#D93025; --warn:#F29900;
+    --sans:'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --serif:Georgia, 'Times New Roman', 'DejaVu Serif', serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:var(--sans);}
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px;}
+
+  /* ---------- hero ---------- */
+  header.hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line); padding:34px 0 26px;}
+  .kicker{display:inline-block; background:#40434B; color:#fff; font:800 12px/1 var(--sans); letter-spacing:1.6px; padding:7px 12px; border-radius:6px; margin-bottom:14px;}
+  h1{font:800 34px/1.15 var(--sans); letter-spacing:-.5px;}
+  h1 em{font:italic 700 34px/1 var(--serif); color:var(--the);}
+  .sub{margin-top:10px; font:400 15.5px/1.55 var(--sans); color:#5C5648; max-width:640px;}
+  .legend{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+  .chip{display:inline-flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 14px 6px 6px; font:600 13px var(--sans); color:#4A4436;}
+  .chip b{font:700 14px var(--serif); color:#fff; border-radius:999px; padding:4px 11px;}
+  .chip.ca b{background:var(--a);} .chip.ct b{background:var(--the);} .chip.cz b{background:var(--zero);} .chip.cs b{background:#8A5B00;}
+  .glyphs{position:absolute; right:26px; top:14px; display:flex; gap:20px; pointer-events:none; user-select:none;}
+  .glyphs span{font:italic 700 92px/1 var(--serif); opacity:.13;}
+  .glyphs span:nth-child(1){color:var(--a); transform:rotate(-8deg);}
+  .glyphs span:nth-child(2){color:var(--the); transform:rotate(5deg) translateY(8px);}
+  .glyphs span:nth-child(3){color:var(--zero); transform:rotate(-4deg);}
+
+  /* ---------- toolbar ---------- */
+  .toolbar{position:sticky; top:0; z-index:50; background:rgba(247,242,232,.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); padding:10px 0;}
+  .tb-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .btn{font:700 14px var(--sans); border-radius:10px; padding:9px 16px; cursor:pointer; border:1.5px solid transparent; transition:.15s;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--ink); color:#fff;}
+  .btn-primary:hover{box-shadow:0 4px 14px rgba(35,37,43,.28); transform:translateY(-1px);}
+  .btn-outline{background:#fff; border-color:#C9C0AC; color:#4A4436;}
+  .btn-outline:hover{border-color:#8A8272;}
+  .btn-ghost{background:transparent; color:#6B6353;}
+  .btn-ghost:hover{background:#EFE8D8;}
+  .switch{display:inline-flex; align-items:center; gap:8px; font:600 13px var(--sans); color:#4A4436; cursor:pointer; margin-left:auto;}
+  .switch input{width:16px; height:16px; accent-color:var(--the); cursor:pointer;}
+  .tb-row2{display:flex; align-items:center; gap:12px; margin-top:9px;}
+  .bar{height:8px; background:#E7DFCC; border-radius:99px; overflow:hidden; flex:1;}
+  .bar i{display:block; height:100%; width:0; background:linear-gradient(90deg, var(--a), var(--the)); transition:width .35s;}
+  .bar.full i{background:var(--ok);}
+  #scoreLbl{font:700 13px var(--sans); color:#4A4436; white-space:nowrap;}
+
+  /* ---------- sections ---------- */
+  main{padding:26px 0 10px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:6px 24px 18px; margin-bottom:22px; box-shadow:0 2px 10px rgba(60,50,30,.06);}
+  .card-head{display:flex; align-items:center; gap:12px; padding:16px 0 12px; border-bottom:2px solid #40434B; flex-wrap:wrap;}
+  .tag{background:#40434B; color:#fff; font:800 13px var(--sans); letter-spacing:.4px; padding:5px 11px; border-radius:6px;}
+  .instr{font:600 14.5px var(--sans); color:#4A4436;}
+  .wa{color:var(--a);} .wt{color:var(--the);} .wz{color:var(--zero);}
+  .score-chip{margin-left:auto; font:700 12.5px var(--sans); color:#6B6353; background:#F1EADB; padding:5px 12px; border-radius:999px; white-space:nowrap;}
+  .model{font:400 14.5px/1.65 var(--sans); color:#5C5648; background:#FBF7EC; border:1px dashed #C9C0AC; border-radius:10px; padding:9px 14px; margin:14px 0 4px;}
+  .model .serif{font-family:var(--serif); font-size:16px; color:var(--ink);}
+
+  .item{display:grid; grid-template-columns:34px 1fr; gap:4px 12px; padding:10px 0; border-bottom:1px dashed var(--line);}
+  .item:last-child{border-bottom:none;}
+  .num{font:700 13px var(--sans); color:#8A8272; background:#F1EADB; border-radius:8px; height:26px; display:flex; align-items:center; justify-content:center; margin-top:5px; transition:.2s;}
+  .item.done .num{background:var(--ok); color:#fff;}
+  .sen{font:400 17.5px/2.3 var(--serif); color:var(--ink);}
+  .note{grid-column:2; display:none; font:400 13.5px/1.5 var(--sans); color:#5C5648; background:#FBF7EC; border-left:3px solid #C9C0AC; border-radius:0 8px 8px 0; padding:7px 12px; margin:2px 0 4px;}
+  .note b{color:#8A6D3B; font-weight:700;}
+  .item.done .note, body.revealed .note{display:block;}
+
+  /* ---------- blanks ---------- */
+  select.blank{
+    appearance:none; -webkit-appearance:none; font:600 14.5px var(--sans);
+    border:1.5px dashed #C9C0AC; border-radius:9px; background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M1 1l4 4 4-4' stroke='%238A8272' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>") no-repeat right 9px center;
+    color:#9A917C; padding:3px 26px 4px 12px; margin:0 3px; min-width:64px; cursor:pointer; vertical-align:middle; transition:.15s;
+  }
+  select.blank:hover{border-color:#8A8272;}
+  select.blank:focus-visible{outline:2px solid var(--the); outline-offset:1px;}
+  select.blank.cap{text-transform:capitalize;}
+  select.blank.wd{min-width:136px;}
+  select.blank.wd:not([data-v=""]){background-color:#FBF0D9; border:1.5px solid #C9A86A; color:#6B4E16;}
+  select.blank[data-v="a"], select.blank[data-v="an"]{background-color:#FBE9E3; border:1.5px solid var(--a); color:#B33A1B;}
+  select.blank[data-v="the"]{background-color:#E8EAF6; border:1.5px solid var(--the); color:var(--the);}
+  select.blank[data-v="Ø"]{background-color:#ECECEA; border:1.5px solid var(--zero); color:#4B5563;}
+  select.blank.ok{box-shadow:0 0 0 2.5px rgba(30,142,62,.30); border-color:var(--ok);}
+  select.blank.wrong{box-shadow:0 0 0 2.5px rgba(217,48,37,.30); border-color:var(--bad); animation:shake .3s;}
+  select.blank.miss{box-shadow:0 0 0 2.5px rgba(242,153,0,.30); border-color:var(--warn);}
+  select.blank:disabled{cursor:default; opacity:.92;}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+  /* ---------- toast & footer ---------- */
+  #toast{position:fixed; left:50%; top:14px; transform:translateX(-50%) scale(.9); opacity:0; pointer-events:none; transition:.25s; background:var(--ok); color:#fff; padding:11px 22px; border-radius:999px; font:700 14.5px var(--sans); box-shadow:0 8px 24px rgba(0,0,0,.25); z-index:99;}
+  #toast.show{opacity:1; transform:translateX(-50%) scale(1);}
+  #toast.dark{background:#40434B;}
+  footer{padding:8px 0 40px; font:400 12.5px/1.6 var(--sans); color:#8A8272;}
+  @media (max-width:640px){
+    .glyphs{display:none;}
+    h1{font-size:27px;} h1 em{font-size:27px;}
+    .sen{font-size:16px;}
+    .switch{margin-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="glyphs" aria-hidden="true"><span>a</span><span>the</span><span>Ø</span></div>
+  <div class="wrap">
+    <div class="kicker">UNIT 8 · EXERCISES · ИНТЕРАКТИВ</div>
+    <h1>Времена года, части суток, еда: <em>Ø · a / an · the</em></h1>
+    <p class="sub">Упражнения 8.1 и 8.2 — выберите правильный вариант. Упражнение 8.3 — выберите артикль или «Ø», если артикль не нужен. После проверки появится объяснение к каждому предложению.</p>
+    <div class="legend">
+      <span class="chip cz"><b>Ø</b> вообще: in winter · at night · have lunch · yesterday evening</span>
+      <span class="chip ca"><b>a / an</b> с описанием: a cold winter · a light supper</span>
+      <span class="chip ct"><b>the</b> through, during, for · in the morning · the dinner she made</span>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="tb-row">
+      <button class="btn btn-primary" id="checkBtn">Проверить</button>
+      <button class="btn btn-outline" id="revealBtn">Показать ответы</button>
+      <button class="btn btn-ghost" id="resetBtn">Сбросить</button>
+      <label class="switch"><input type="checkbox" id="immChk"> проверять сразу при выборе</label>
+    </div>
+    <div class="tb-row2">
+      <div class="bar" id="bar"><i id="barFill"></i></div>
+      <span id="scoreLbl">Верно: 0 / 0</span>
+    </div>
+  </div>
+</div>
+
+<main><div class="wrap" id="sections"></div></main>
+
+<footer><div class="wrap">Сделано по упражнениям 8.1, 8.2 и 8.3 (Unit 8) учебника. Подсветка пропусков совпадает с выбором: синий — the, оранжевый — a/an, серый — Ø (без артикля). Там, где возможны два варианта, засчитываются оба. Пояснения к предложениям — редакция пособия-плаката.</div></footer>
+
+<div id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ------------------------------------------------ data ------------------------------------------------ */
+const DATA = [
+  { id:"8.1", instr:"Закончите вопросы, используя слова в скобках. Вставьте артикли, где это необходимо.", opts:[], items:[
+    { n:1, seg:["What did you do ", {"i": 0, "o": ["the yesterday evening", "yesterday in the evening", "yesterday evening"]}, "?"], ans:["yesterday evening"],
+      note:"с yesterday / tomorrow часть суток — без артикля и без предлога." },
+    { n:2, seg:["What are you going to do ", {"i": 0, "o": ["tomorrow the afternoon", "tomorrow afternoon", "the tomorrow afternoon"]}, "?"], ans:["tomorrow afternoon"],
+      note:"с tomorrow — без артикля." },
+    { n:3, seg:["What did you do ", {"i": 0, "o": ["on Monday morning", "on the Monday morning", "on Monday the morning"]}, "?"], ans:["on Monday morning"],
+      note:"день недели + часть суток — без артикля." },
+    { n:4, seg:["Will you stay at home ", {"i": 0, "o": ["on the Sunday evening", "on Sunday the evening", "on Sunday evening"]}, "?"], ans:["on Sunday evening"],
+      note:"день недели + часть суток — без артикля." },
+    { n:5, seg:["What do you usually have ", {"i": 0, "o": ["for the breakfast", "for breakfast", "for a breakfast"]}, "?"], ans:["for breakfast"],
+      note:"приём пищи — как правило, без артикля." },
+    { n:6, seg:["Do you usually have ", {"i": 0, "o": ["light or heavy breakfast", "a light or a heavy breakfast", "the light or the heavy breakfast"]}, "?"], ans:["a light or a heavy breakfast"],
+      note:"есть описательное определение → a light / a heavy breakfast." },
+    { n:7, seg:["Do you always ", {"i": 0, "o": ["make a dinner", "make the dinner", "make dinner"]}, " yourself?"], ans:["make dinner"],
+      note:"приём пищи без определения — без артикля." },
+    { n:8, seg:["Do you think it’s bad to have ", {"i": 0, "o": ["the late supper", "late supper", "a late supper"]}, "?"], ans:["a late supper"],
+      note:"late здесь описывает ужин («поздний ужин») → a late supper." },
+    { n:9, seg:["Did you get up early ", {"i": 0, "o": ["in morning", "in a morning", "in the morning"]}, "?"], ans:["in the morning"],
+      note:"часть суток после in → the." },
+    { n:10, seg:["Did you go to bed late ", {"i": 0, "o": ["the last night", "at the last night", "last night"]}, "?"], ans:["last night"],
+      note:"last + время — без артикля." },
+    { n:11, seg:["Do you often ask your friends ", {"i": 0, "o": ["to the dinner", "to dinner", "to a dinner"]}, "?"], ans:["to dinner"],
+      note:"приём пищи — без артикля: ask to dinner. В ключе учебника напечатано «to supper», хотя в задании дано слово dinner; артикль в обоих случаях не нужен." },
+    { n:12, seg:["Are you going to the country ", {"i": 0, "o": ["for summer", "for a summer", "for the summer"]}, "?"], ans:["for the summer"],
+      note:"время года после for → the." },
+    { n:13, seg:["Is ", {"i": 0, "o": ["a late spring", "the late spring", "late spring"]}, " beautiful?"], ans:["late spring"],
+      note:"время года с late / early — без артикля." },
+    { n:14, seg:["Do you know people who hate ", {"i": 0, "o": ["the autumn", "autumn", "an autumn"]}, "?"], ans:["autumn"],
+      note:"время года вообще — без артикля." },
+    { n:15, seg:["Do you go in for sports ", {"i": 0, "o": ["in winter", "in a winter", "in the winter"]}, "?"], ans:["in winter"],
+      note:"время года с предлогом in — без артикля." },
+    { n:16, seg:["Did you skate ", {"i": 0, "o": ["the last winter", "in the last winter", "last winter"]}, "?"], ans:["last winter"],
+      note:"last + время — без артикля." }
+  ]},
+  { id:"8.2", instr:"Выберите правильный вариант.", opts:[], items:[
+    { n:1, seg:["Do you sometimes sleep during ", {"i": 0, "o": ["day", "the day"]}, "?"], ans:["the day"],
+      note:"часть суток после during → the." },
+    { n:2, seg:["She always took her children to the sea-side for ", {"i": 0, "o": ["summer", "the summer"]}, "."], ans:["the summer"],
+      note:"время года после for → the." },
+    { n:3, seg:["Nature is wonderful ", {"i": 0, "o": ["in spring", "in the spring"]}, "."], ans:["in spring"],
+      note:"время года с предлогом in — без артикля." },
+    { n:4, seg:["It was ", {"i": 0, "o": ["late afternoon", "the late afternoon"]}, "."], ans:["late afternoon"],
+      note:"безличное предложение, late — без артикля." },
+    { n:5, seg:["It was ", {"i": 0, "o": ["cold evening", "a cold evening"]}, "."], ans:["a cold evening"],
+      note:"описательное определение → a." },
+    { n:6, seg:["It’s necessary to have ", {"i": 0, "o": ["heavy", "a heavy"]}, " breakfast."], ans:["a heavy"],
+      note:"приём пищи с описательным определением → a." },
+    { n:7, seg:[{"i": 0, "o": ["Dinner", "The dinner"]}, " she made was wonderful."], ans:["The dinner"],
+      note:"лимитирующее определение (she made) → the." },
+    { n:8, seg:["He appeared ", {"i": 0, "o": ["before midday", "before the midday"]}, "."], ans:["before midday"],
+      note:"после before — без артикля." },
+    { n:9, seg:["He spent ", {"i": 0, "o": ["evening", "the evening"]}, " with his parents."], ans:["the evening"],
+      note:"конкретный вечер → the." },
+    { n:10, seg:["She phoned several times ", {"i": 0, "o": ["during morning", "during the morning"]}, "."], ans:["during the morning"],
+      note:"после during → the." },
+    { n:11, seg:[{"i": 0, "o": ["Lunch", "The lunch"]}, " was awful. I didn’t expect it to be so bad."], ans:["The lunch"],
+      note:"конкретный обед, о котором идёт речь, → the." },
+    { n:12, seg:["They danced all through ", {"i": 0, "o": ["night", "the night"]}, "."], ans:["the night"],
+      note:"после through → the." },
+    { n:13, seg:["I remember it was ", {"i": 0, "o": ["rainy summer", "a rainy summer"]}, "."], ans:["a rainy summer"],
+      note:"описательное определение → a." },
+    { n:14, seg:[{"i": 0, "o": ["Late summer", "The late summer"]}, " is usually rainy here."], ans:["Late summer"],
+      note:"время года с late — без артикля." }
+  ]},
+  { id:"8.3", instr:"Вставьте артикли, где это необходимо.", opts:["a", "an", "the", "Ø"], items:[
+    { n:1, seg:["It was ", 0, " sunny morning and the family decided to have ", 1, " breakfast in the garden."], ans:["a", "Ø"],
+      note:"описательное определение → a sunny morning; приём пищи — без артикля." },
+    { n:2, seg:["I’m not hungry. I’ll have ", 0, " light lunch."], ans:["a"],
+      note:"приём пищи с описательным определением → a light lunch." },
+    { n:3, seg:["It was ", 0, " cold November evening. The ground was covered with snow."], ans:["a"],
+      note:"описательное определение → a cold November evening." },
+    { n:4, seg:["Let’s meet on ", 0, " Tuesday afternoon. I can invite you to ", 1, " dinner."], ans:["Ø", "Ø"],
+      note:"день недели + часть суток — без артикля; приём пищи — без артикля." },
+    { n:5, seg:["How did you spend ", 0, " day?"], ans:["the"],
+      note:"конкретный день → the." },
+    { n:6, seg:["He worked from ", 0, " early morning every day and had a rest in ", 1, " evening."], ans:["Ø", "the"],
+      note:"early morning — без артикля; после in → the evening." },
+    { n:7, seg:["She worked hard during ", 0, " winter."], ans:["the"],
+      note:"время года после during → the." },
+    { n:8, seg:["He decided to spend ", 0, " winter in town."], ans:["the|Ø"],
+      note:"конкретная (эта) зима → the. В ключе учебника артикль дан в скобках — (the) winter, поэтому вариант без артикля тоже засчитывается." },
+    { n:9, seg:["Where did you spend the time from ", 0, " midnight till eight in ", 1, " morning?"], ans:["Ø", "the"],
+      note:"midnight — без артикля; после in → the morning." },
+    { n:10, seg:["The child sleeps well at ", 0, " night but never sleeps during ", 1, " day."], ans:["Ø", "the"],
+      note:"at night — без артикля; после during → the day." },
+    { n:11, seg:["We were ready to start at ", 0, " dawn."], ans:["Ø"],
+      note:"at dawn — без артикля." },
+    { n:12, seg:["It was ", 0, " cloudy morning and they decided to stay at home."], ans:["a"],
+      note:"описательное определение → a cloudy morning." },
+    { n:13, seg:["On ", 0, " day of his arrival the family woke up early in ", 1, " morning."], ans:["the", "the"],
+      note:"день чего именно? (of his arrival) → the; после in → the morning." },
+    { n:14, seg:[0, " summer is very short in Britain."], ans:["Ø|the"],
+      note:"время года вообще — без артикля. (В живой речи встречается и The summer…, этот вариант тоже засчитывается.)" }
+  ]}
+];
+
+/* ------------------------------------------------ build ------------------------------------------------ */
+const ANSW = {}, DISP = {}, ITEM_KEYS = {}, KEY_EL = {}, EX_TOTAL = {};
+DATA.forEach(ex => {
+  EX_TOTAL[ex.id] = ex.items.reduce((s,it)=>s+it.ans.length,0);
+  ex.items.forEach(it => {
+    const ik = ex.id + "/" + it.n;
+    ITEM_KEYS[ik] = it.ans.map((a,b)=>{ const k = ik + "/" + b; ANSW[k] = a.toLowerCase().split("|"); DISP[k] = a.split("|")[0]; return k; });
+  });
+});
+const TOTAL = Object.keys(ANSW).length;
+
+const sections = document.getElementById("sections");
+DATA.forEach(ex => {
+  const card = document.createElement("section"); card.className = "card";
+  const head = document.createElement("div"); head.className = "card-head";
+  head.innerHTML = '<span class="tag">УПР. ' + ex.id + '</span><span class="instr">' + ex.instr + '</span>' +
+                   '<span class="score-chip" id="sc-' + ex.id + '">0 / ' + EX_TOTAL[ex.id] + '</span>';
+  card.appendChild(head);
+  if (ex.model){ const m = document.createElement("div"); m.className = "model"; m.innerHTML = ex.model; card.appendChild(m); }
+  ex.items.forEach(it => {
+    const item = document.createElement("div"); item.className = "item";
+    const ik = ex.id + "/" + it.n; item.dataset.ik = ik;
+    const num = document.createElement("span"); num.className = "num"; num.textContent = it.n; item.appendChild(num);
+    const sen = document.createElement("div"); sen.className = "sen";
+    it.seg.forEach((sg,i) => {
+      if (typeof sg === "string") { sen.appendChild(document.createTextNode(sg)); return; }
+      const isObj = typeof sg === "object";
+      const bi = isObj ? sg.i : sg;
+      const opts = (isObj && sg.o) ? sg.o : ex.opts;
+      const s = document.createElement("select");
+      const prev = i > 0 && typeof it.seg[i-1] === "string" ? it.seg[i-1] : "";
+      s.className = "blank" + (isObj ? " wd" : "") + (((i === 0 || /[.?!—]\s*$/.test(prev)) && !isObj) ? " cap" : "");
+      const k = ik + "/" + bi;
+      s.dataset.key = k; s.dataset.v = "";
+      s.innerHTML = '<option value="">…</option>' + opts.map(o => '<option value="'+o+'">'+o+'</option>').join("");
+      s.addEventListener("change", onChange);
+      KEY_EL[k] = s; sen.appendChild(s);
+    });
+    item.appendChild(sen);
+    const note = document.createElement("div"); note.className = "note";
+    note.innerHTML = "<b>Почему:</b> " + it.note;
+    item.appendChild(note);
+    card.appendChild(item);
+  });
+  sections.appendChild(card);
+});
+const ALL = Object.values(KEY_EL);
+
+/* ------------------------------------------------ logic ------------------------------------------------ */
+const bar = document.getElementById("bar"), barFill = document.getElementById("barFill"),
+      scoreLbl = document.getElementById("scoreLbl"), toast = document.getElementById("toast"),
+      imm = document.getElementById("immChk");
+let toastTimer = null;
+
+function gradeBlank(s){
+  s.classList.remove("ok","wrong","miss");
+  if (!s.value) { s.classList.add("miss"); return false; }
+  const ok = ANSW[s.dataset.key].includes(s.value.toLowerCase());
+  if (ok) s.classList.add("ok");
+  else { void s.offsetWidth; s.classList.add("wrong"); }
+  return ok;
+}
+function refreshItems(){
+  document.querySelectorAll(".item").forEach(it => {
+    const els = ITEM_KEYS[it.dataset.ik].map(k => KEY_EL[k]);
+    it.classList.toggle("done", els.length > 0 && els.every(s => s.classList.contains("ok")));
+  });
+}
+function refreshScores(){
+  let okAll = 0;
+  DATA.forEach(ex => {
+    let ok = 0;
+    ex.items.forEach(it => ITEM_KEYS[ex.id + "/" + it.n].forEach(k => { if (KEY_EL[k].classList.contains("ok")) ok++; }));
+    document.getElementById("sc-" + ex.id).textContent = ok + " / " + EX_TOTAL[ex.id];
+    okAll += ok;
+  });
+  const revealed = document.body.classList.contains("revealed");
+  scoreLbl.textContent = revealed ? ("Ответы показаны · " + TOTAL + " / " + TOTAL) : ("Верно: " + okAll + " / " + TOTAL);
+  barFill.style.width = (okAll / TOTAL * 100) + "%";
+  bar.classList.toggle("full", okAll === TOTAL);
+  return okAll;
+}
+function showToast(msg, dark){
+  toast.textContent = msg;
+  toast.classList.toggle("dark", !!dark);
+  toast.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>toast.classList.remove("show"), 4200);
+}
+function onChange(e){
+  const s = e.target;
+  s.dataset.v = s.value;
+  s.classList.remove("ok","wrong","miss");
+  if (imm.checked && s.value) gradeBlank(s);
+  refreshItems(); refreshScores(); save();
+}
+document.getElementById("checkBtn").addEventListener("click", () => {
+  ALL.forEach(s => gradeBlank(s));
+  refreshItems();
+  const ok = refreshScores(); save();
+  if (ok === TOTAL) showToast("🎉 Отлично! Все " + TOTAL + " пропусков — верно!");
+  else showToast("Проверено: верно " + ok + " из " + TOTAL + ". Ошибки подсвечены красным, пустые — жёлтым.", true);
+});
+document.getElementById("revealBtn").addEventListener("click", () => {
+  document.body.classList.add("revealed");
+  ALL.forEach(s => { s.value = DISP[s.dataset.key]; s.dataset.v = s.value; s.classList.remove("wrong","miss"); s.classList.add("ok"); s.disabled = true; });
+  refreshItems(); refreshScores(); save();
+});
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.body.classList.remove("revealed");
+  toast.classList.remove("show");
+  ALL.forEach(s => { s.value = ""; s.dataset.v = ""; s.classList.remove("ok","wrong","miss"); s.disabled = false; });
+  refreshItems(); refreshScores(); save();
+});
+imm.addEventListener("change", () => {
+  if (imm.checked) ALL.forEach(s => { if (s.value && !s.disabled) gradeBlank(s); });
+  refreshItems(); refreshScores(); save();
+});
+
+/* ------------------------------------------------ persistence (guarded) ------------------------------------------------ */
+function save(){
+  try {
+    const vals = {}; ALL.forEach(s => { if (s.value) vals[s.dataset.key] = s.value; });
+    localStorage.setItem("unit8-articles", JSON.stringify({ vals, imm: imm.checked, revealed: document.body.classList.contains("revealed") }));
+  } catch(e) {}
+}
+function load(){
+  try {
+    const st = JSON.parse(localStorage.getItem("unit8-articles") || "null");
+    if (!st) return;
+    imm.checked = !!st.imm;
+    Object.entries(st.vals || {}).forEach(([k,v]) => { if (KEY_EL[k]) { KEY_EL[k].value = v; KEY_EL[k].dataset.v = v; } });
+    if (st.revealed) document.getElementById("revealBtn").click();
+  } catch(e) {}
+}
+load();
+refreshItems(); refreshScores();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5a72609fd2a9db8',t:'MTc5NDY3MTE4Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5a72609fd2a9db8',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
